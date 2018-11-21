@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>回放</title>
+<style>
+#box{
+    width:200px;
+    height: 200px;
+    background:red;
+    position: absolute;
+    left:0;
+    top:30px;
+    background: url(图片.png);
+    background-size: 100% 100%;
+    border-radius: 50%;
+}
+</style>
+</head>
+<body>
+    <div id="box"></div>
+    <button id="but">回放</button>
+<script>
+
+    const box = document.getElementById('box');
+    let disX = 0;
+    let disY = 0;
+    let num = 0;
+    let num1 = 1;
+    let onOff = true;
+    let time = null;
+    let aa = [box.offsetLeft];          //  创建一个新数组，存放移动过程中的X轴坐标
+    let bb = [box.offsetTop];          //  创建一个新数组，存放移动过程中的y轴坐标
+
+    box.onmousedown = function(ev){
+        //按下的位置到元素边的位置 （那一小截）
+        disX = ev.pageX - box.offsetLeft
+        disY = ev.pageY - box.offsetTop
+        document.onmousemove = function(ev){
+            if(onOff){
+                num ++;
+                onOff = false;
+            }
+            box.style.left = ev.pageX - disX + 'px';
+            box.style.top = ev.pageY - disY + 'px';
+            aa.push(parseFloat(box.style.left));
+            bb.push(parseFloat(box.style.top));
+            num1++;
+        }
+        document.onmouseup = function(){
+            onOff = true;
+            document.onmouseup = document.onmousemove = null;
+        }
+        return false; 
+    }
+    // 点击后回放
+    but.onclick = function(){
+        time = setInterval(function(){
+            if (num1 > 1) {
+                console.log(aa.length)
+                box.style.left = aa[num1-1]*1 + 'px';
+                box.style.top = bb[num1-1]*1 + 'px';
+                num1--
+                aa.pop();
+                bb.pop();
+
+            }else{
+                clearInterval(time);
+                box.style.left = aa[0];
+                box.style.top = bb[0];
+            }     
+        }, 16.7)
+    }
+   
+
+
+</script>
+</body>
+</html>
